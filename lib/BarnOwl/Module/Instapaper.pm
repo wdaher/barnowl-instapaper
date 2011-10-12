@@ -74,7 +74,6 @@ sub cmd_readlater {
     
     if ( $success && $cfg->{'delete-after-success'} ) {
 	$msg->delete();
-	BarnOwl::command("recv:next");
     }
 }
 
