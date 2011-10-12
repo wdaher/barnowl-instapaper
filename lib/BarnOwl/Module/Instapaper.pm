@@ -37,29 +37,19 @@ my $ua = LWP::UserAgent->new;
 $ua->agent("BarnOwl-Instapaper/$VERSION");
 
 sub cmd_readlater {
-    ## TODO: maybe allow you to manually specify a url as an argument?
-    my $cmd = shift;
-    my $args = join(" ", @_);
-    my $m = BarnOwl::getcurmsg();
-    my $body = $m->body;
+    my $body = BarnOwl::getcurmsg()->body;
 
-    ## Borrowed from http://perladvent.pm.org/2002/1st/
-    # a list of the urls
+    ## Find all URLs and add them to @urls
+    ## --- Borrowed from http://perladvent.pm.org/2002/1st/
     my @urls;
     my $actually_found_anything = 0;
     my $finder = URI::Find::Schemeless->new(sub {
 	my $uri    = shift;  # object representing the url
-	my $string = shift;  # text that was in the url
-	# remember the $uri's address by adding it to @urls which
-	# we can see from within this sub
+	my $string = shift;
 	push @urls, $uri->abs;
 	$actually_found_anything = 1;
-	# return the original text back to leave the text
-	# we were searching unaltered
 	return $string;
      });
-
-    # and process the text through that finder
     $finder->find(\$body);
 
     if ( $actually_found_anything ) {
@@ -90,8 +80,9 @@ sub process_url {
 
 BarnOwl::new_command(readlater => \&cmd_readlater, {
     summary => "Save a URL to Instapaper for later reading",
-    usage   => "readlater [zephyr command-line]",
-    description => "Scans the currently-selected message for a URL and saves it to your Instapaper account."
+    usage   => "readlater",
+    description => "Scans the currently-selected message for a URL and saves it to your \n" .
+	"Instapaper account."
    });
 
 1;
