@@ -1,0 +1,9 @@
+The Instapaper module lets you add URLs in zephyrs to your Instapaper queue.
+
+To use it:
+* Link to or copy the module ( ln -s /mit/wdaher/Public/barnowl-modules/Instapaper.par ~/.owl/modules )
+
+* Add your twitter credentials to ~/.owl/instapaper as a JSON hash, e.g.
+{"user":"wdaher@gmail.com", "password":"falafel" }
+
+* Load the module ( :reload-module Instapaper )
