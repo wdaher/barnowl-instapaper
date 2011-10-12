@@ -72,8 +72,9 @@ sub cmd_readlater {
 	BarnOwl::message("Sorry, homie, we didn't actually find any URLs in your message.");
     }
     
-    if ( $success && $cfg->{'archive_after'} ) {
+    if ( $success && $cfg->{'delete-after-success'} ) {
 	$msg->delete();
+	BarnOwl::command("recv:next");
     }
 }
 
@@ -104,17 +105,5 @@ BarnOwl::new_command(readlater => \&cmd_readlater, {
    });
 
 BarnOwl::command("bindkey recv I command readlater");
-
-sub debug_message {
-    my $debugdata = shift;
-    my $msg = BarnOwl::Message->new(
-	type      => 'Twitter',
-	sender    => 'Debug',
-	recipient => 'wdaher',
-	direction => 'in',
-	body      =>  $debugdata,
-	);
-    BarnOwl::queue_message($msg);
-}
 
 1;
