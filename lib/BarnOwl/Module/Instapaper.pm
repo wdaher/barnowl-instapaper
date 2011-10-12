@@ -87,4 +87,16 @@ BarnOwl::new_command(readlater => \&cmd_readlater, {
 
 BarnOwl::command("bindkey recv I command readlater");
 
+sub debug_message {
+    my $debugdata = shift;
+    my $msg = BarnOwl::Message->new(
+	type      => 'Twitter',
+	sender    => 'Debug',
+	recipient => 'wdaher',
+	direction => 'in',
+	body      =>  $debugdata,
+	);
+    BarnOwl::queue_message($msg);
+}
+
 1;
