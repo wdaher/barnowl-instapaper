@@ -85,4 +85,6 @@ BarnOwl::new_command(readlater => \&cmd_readlater, {
 	"Instapaper account."
    });
 
+BarnOwl::command("bindkey recv I command readlater");
+
 1;
