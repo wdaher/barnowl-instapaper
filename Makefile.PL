@@ -3,6 +3,6 @@ use warnings;
 
 use inc::Module::Install;
 
-barnowl_module('ZStatus');
+barnowl_module('Instapaper');
 
 WriteAll;
