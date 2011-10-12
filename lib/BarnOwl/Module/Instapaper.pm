@@ -62,13 +62,18 @@ sub cmd_readlater {
      });
     $finder->find(\$body);
 
+    my $success = 0;
     if ( $actually_found_anything ) {
 	foreach my $url (@urls)
 	{
-	    process_url($url, $selection);
+	    $success += process_url($url, $selection);
 	}
     } else {
 	BarnOwl::message("Sorry, homie, we didn't actually find any URLs in your message.");
+    }
+    
+    if ( $success && $cfg->{'archive_after'} ) {
+	$msg->delete();
     }
 }
 
@@ -84,8 +89,10 @@ sub process_url {
     my $res = $ua->request($req);
     if ( $res->is_success ) {
 	BarnOwl::message("Added $url to Instapaper. Enjoy!");
+	return 1;
     } else {
 	BarnOwl::message("Sorry, something went wrong: " . $res->status_line);
+	return 0;
     }
 }
 
