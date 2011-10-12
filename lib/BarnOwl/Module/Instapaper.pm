@@ -15,10 +15,11 @@ package BarnOwl::Module::Instapaper;
 
 our $VERSION = 0.1;
 
+use BarnOwl;
 require URI::Find::Schemeless;
 use LWP::UserAgent;
+use HTTP::Request::Common qw(POST);
 use JSON;
-use BarnOwl;
 
 my $conffile = BarnOwl::get_config_dir() . "/instapaper";
 open(my $fh, "<", "$conffile") || fail("Unable to read $conffile");
@@ -65,10 +66,9 @@ sub cmd_readlater {
 sub process_url {
     my $url = shift;
     BarnOwl::message("Trying to add $url...");
-
-    my $req = HTTP::Request->new(POST => 'https://www.instapaper.com/api/add');
-    $req->content_type('application/x-www-form-urlencoded');
-    $req->content("username=$username&password=$password&url=$url");
+    my $req = POST 'https://www.instapaper.com/api/add', [ username => $username,
+							   password => $password,
+							   url      => $url ];
 
     my $res = $ua->request($req);
     if ( $res->is_success ) {
