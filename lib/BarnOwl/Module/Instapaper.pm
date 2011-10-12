@@ -38,7 +38,16 @@ my $ua = LWP::UserAgent->new;
 $ua->agent("BarnOwl-Instapaper/$VERSION");
 
 sub cmd_readlater {
-    my $body = BarnOwl::getcurmsg()->body;
+    my $msg = BarnOwl::getcurmsg();
+    my $body = $msg->body;
+    my $class = $msg->class;
+    my $instance = $msg->instance;
+    my $sender = $msg->sender;
+    $sender =~ s/\@ATHENA.MIT.EDU//;
+    my $selection = "($class / $instance / $sender)\n$body";
+    if ( $msg->type eq 'Twitter' ) {
+	$selection = "(\@$sender) $body";
+    }
 
     ## Find all URLs and add them to @urls
     ## --- Borrowed from http://perladvent.pm.org/2002/1st/
@@ -56,7 +65,7 @@ sub cmd_readlater {
     if ( $actually_found_anything ) {
 	foreach my $url (@urls)
 	{
-	    process_url($url);
+	    process_url($url, $selection);
 	}
     } else {
 	BarnOwl::message("Sorry, homie, we didn't actually find any URLs in your message.");
@@ -65,10 +74,12 @@ sub cmd_readlater {
 
 sub process_url {
     my $url = shift;
+    my $selection = shift;
     BarnOwl::message("Trying to add $url...");
-    my $req = POST 'https://www.instapaper.com/api/add', [ username => $username,
-							   password => $password,
-							   url      => $url ];
+    my $req = POST 'https://www.instapaper.com/api/add', [ username  => $username,
+							   password  => $password,
+							   selection => $selection,
+							   url       => $url ];
 
     my $res = $ua->request($req);
     if ( $res->is_success ) {
