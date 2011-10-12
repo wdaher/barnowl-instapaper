@@ -1,9 +1,13 @@
 The Instapaper module lets you add URLs in zephyrs to your Instapaper queue.
 
-To use it:
+Setting it up:
 * Link to or copy the module ( ln -s /mit/wdaher/Public/barnowl-modules/Instapaper.par ~/.owl/modules )
 
-* Add your twitter credentials to ~/.owl/instapaper as a JSON hash, e.g.
+* Add your Instapaper credentials to ~/.owl/instapaper as a JSON hash, e.g.
 {"user":"wdaher@gmail.com", "password":"falafel" }
 
 * Load the module ( :reload-module Instapaper )
+
+Using it:
+* :readlater on the message that contains a URL you want to read later
+* Or, just type in a capital I
